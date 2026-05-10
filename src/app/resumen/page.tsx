@@ -11,16 +11,12 @@ export default function ResumenPage() {
     const [mounted, setMounted] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-
     const { serviciosSeleccionados, datosEmpresa } = useConfiguradorStore()
 
     useEffect(() => {
         setMounted(true)
-        if (serviciosSeleccionados.length === 0) {
-            router.replace('/')
-        } else if (!datosEmpresa) {
-            router.replace('/datos')
-        }
+        if (serviciosSeleccionados.length === 0) router.replace('/')
+        else if (!datosEmpresa) router.replace('/datos')
     }, [])
 
     if (!mounted || serviciosSeleccionados.length === 0 || !datosEmpresa) return null
@@ -47,79 +43,101 @@ export default function ResumenPage() {
     }
 
     return (
-        <main className="min-h-screen">
-            <div className="max-w-xl mx-auto px-6 py-12">
-                <header className="mb-10">
-                    <div className="mb-6">
+        <main style={{ minHeight: '100vh', position: 'relative', zIndex: 10 }}>
+            <div style={{ maxWidth: 600, margin: '0 auto', padding: '48px 24px 80px' }}>
+
+                <header style={{ marginBottom: 48 }}>
+                    <div style={{ marginBottom: 20 }}>
                         <StepIndicator paso={3} />
                     </div>
-                    <h1
-                        className="text-3xl font-semibold mb-2"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                    >
+                    <h1 style={{
+                        fontFamily: 'var(--font-display)',
+                        fontSize: 'clamp(24px, 3.5vw, 40px)',
+                        fontWeight: 700,
+                        color: '#ebebeb',
+                        letterSpacing: '-0.02em',
+                        lineHeight: 1.25,
+                        paddingBottom: 4,
+                        marginBottom: 12,
+                        overflowWrap: 'break-word',
+                    }}>
                         Resumen del pedido
                     </h1>
-                    <p className="text-[var(--muted)]">
+                    <p style={{ color: '#555', fontSize: 15, lineHeight: 1.6 }}>
                         Revisa los detalles antes de pagar.
                     </p>
                 </header>
 
-                <div className="space-y-4">
-                    <Card title="Servicios seleccionados">
-                        <ul className="space-y-1.5">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+                    {/* Servicios */}
+                    <Panel label="Servicios seleccionados">
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                             {serviciosElegidos.map(s => (
-                                <li key={s.id} className="flex items-center gap-2.5 text-sm">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
-                                    <span className="text-[var(--text)]">{s.nombre}</span>
-                                </li>
+                                <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4a7cf5', flexShrink: 0 }} />
+                                    <span style={{ fontSize: 14, color: '#c0c0c0' }}>{s.nombre}</span>
+                                </div>
                             ))}
-                        </ul>
-                    </Card>
+                        </div>
+                    </Panel>
 
-                    <Card title="Datos de empresa">
-                        <dl className="space-y-1.5 font-mono text-sm">
-                            <Row label="Nombre" value={datosEmpresa.nombreRazonSocial} />
-                            <Row label="CIF/DNI" value={datosEmpresa.cifDni} />
-                            <Row label="Dirección" value={datosEmpresa.direccion} />
-                            <Row label="Email" value={datosEmpresa.email} />
-                            <Row label="Contacto" value={datosEmpresa.personaContacto} />
-                            <Row label="Teléfono" value={datosEmpresa.telefono} />
-                        </dl>
-                    </Card>
+                    {/* Datos */}
+                    <Panel label="Datos de empresa">
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            {([
+                                ['Nombre', datosEmpresa.nombreRazonSocial],
+                                ['CIF/DNI', datosEmpresa.cifDni],
+                                ['Dirección', datosEmpresa.direccion],
+                                ['Email', datosEmpresa.email],
+                                ['Contacto', datosEmpresa.personaContacto],
+                                ['Teléfono', datosEmpresa.telefono],
+                            ] as [string, string][]).map(([k, v]) => (
+                                <div key={k} style={{ display: 'flex', gap: 16 }}>
+                                    <span style={{ fontSize: 12, color: '#444', fontFamily: 'var(--font-mono)', width: 68, flexShrink: 0 }}>{k}</span>
+                                    <span style={{ fontSize: 13, color: '#999', wordBreak: 'break-all' }}>{v}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </Panel>
 
-                    <Card title="Precio">
-                        <div className="space-y-2 font-mono text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-[var(--muted)]">Setup (pago único)</span>
-                                <span className="text-[var(--text)]">{precio.setup} EUR</span>
+                    {/* Precio */}
+                    <div style={{
+                        background: 'rgba(74,124,245,0.07)',
+                        border: '1px solid rgba(74,124,245,0.2)',
+                        borderRadius: 8,
+                        padding: 20,
+                    }}>
+                        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#4a7cf5', marginBottom: 16 }}>
+                            Precio
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                                <span style={{ fontSize: 14, color: '#777' }}>Setup (pago único)</span>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 26, fontWeight: 700, color: '#4a7cf5' }}>{precio.setup} EUR</span>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-[var(--muted)]">Mantenimiento mensual</span>
-                                <span className="text-[var(--text)]">{precio.mantenimiento} EUR/mes</span>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid rgba(74,124,245,0.12)', paddingTop: 10 }}>
+                                <span style={{ fontSize: 13, color: '#555' }}>Mantenimiento mensual</span>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#555' }}>{precio.mantenimiento} EUR/mes</span>
                             </div>
                         </div>
-                    </Card>
+                    </div>
 
                     {error && (
-                        <p className="text-sm text-[var(--danger)] font-mono bg-[var(--danger)]/10 border border-[var(--danger)]/20 rounded-lg px-4 py-3">
+                        <div style={{ background: 'rgba(224,82,82,0.08)', border: '1px solid rgba(224,82,82,0.2)', borderRadius: 8, padding: '12px 16px', fontSize: 13, color: 'var(--danger)', fontFamily: 'var(--font-mono)' }}>
                             {error}
-                        </p>
+                        </div>
                     )}
 
-                    <div className="flex gap-3 pt-2">
-                        <button
-                            onClick={() => router.push('/datos')}
-                            className="px-5 py-3 border border-[var(--border)] rounded-lg text-[var(--muted)]
-                                hover:text-[var(--text)] hover:border-white/25 transition-all"
-                        >
+                    <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
+                        <button onClick={() => router.push('/datos')} className="btn-ghost">
                             ← Atrás
                         </button>
                         <button
                             onClick={handlePagar}
                             disabled={loading}
-                            className="flex-1 py-3 px-6 bg-[var(--accent)] text-white font-medium rounded-lg
-                                hover:bg-[#3a6ce0] active:scale-[0.98] transition-all
-                                disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="btn-primary"
+                            style={{ flex: 1, opacity: loading ? 0.6 : 1 }}
                         >
                             {loading ? 'Redirigiendo...' : 'Contratar y pagar →'}
                         </button>
@@ -130,22 +148,13 @@ export default function ResumenPage() {
     )
 }
 
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
+function Panel({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="bg-[var(--bg-2)] border border-[var(--border)] rounded-xl p-5">
-            <h2 className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
-                {title}
-            </h2>
+        <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8, padding: 20 }}>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#333', marginBottom: 14 }}>
+                {label}
+            </p>
             {children}
-        </div>
-    )
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-    return (
-        <div className="flex gap-3">
-            <dt className="text-[var(--muted)] shrink-0 w-20">{label}</dt>
-            <dd className="text-[var(--text)]">{value}</dd>
         </div>
     )
 }

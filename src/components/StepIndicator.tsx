@@ -2,23 +2,28 @@ export default function StepIndicator({ paso }: { paso: 1 | 2 | 3 }) {
     const pasos = ['Servicios', 'Datos', 'Resumen']
 
     return (
-        <div className="flex items-center gap-2 font-mono text-xs select-none">
+        <div className="flex items-center gap-0 select-none">
             {pasos.map((nombre, i) => {
                 const num = i + 1
                 const activo = num === paso
                 const completado = num < paso
 
                 return (
-                    <div key={num} className="flex items-center gap-2">
-                        <div className="flex items-center gap-1.5">
+                    <div key={num} className="flex items-center">
+                        <div className="flex items-center gap-2">
                             <span
-                                className={`w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold transition-all ${
-                                    activo
-                                        ? 'bg-[#4a7cf5] text-white shadow-[0_0_12px_rgba(74,124,245,0.4)]'
+                                className="flex items-center justify-center rounded-full font-mono text-[11px] font-bold transition-all duration-200"
+                                style={{
+                                    width: 22,
+                                    height: 22,
+                                    background: activo
+                                        ? '#4a7cf5'
                                         : completado
-                                        ? 'bg-[#4a7cf5]/20 text-[#4a7cf5]'
-                                        : 'bg-white/6 text-[#444]'
-                                }`}
+                                        ? 'rgba(74,124,245,0.2)'
+                                        : 'rgba(255,255,255,0.06)',
+                                    color: activo ? '#fff' : completado ? '#4a7cf5' : '#444',
+                                    boxShadow: activo ? '0 0 12px rgba(74,124,245,0.5)' : 'none',
+                                }}
                             >
                                 {completado ? (
                                     <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
@@ -27,16 +32,17 @@ export default function StepIndicator({ paso }: { paso: 1 | 2 | 3 }) {
                                 ) : num}
                             </span>
                             <span
-                                className={`transition-colors ${
-                                    activo ? 'text-[#e2e2e2]' : 'text-[#444]'
-                                }`}
+                                className="text-xs font-mono transition-colors"
+                                style={{ color: activo ? '#d4d4d4' : '#444' }}
                             >
                                 {nombre}
                             </span>
                         </div>
 
                         {i < 2 && (
-                            <span className="text-white/10 text-base leading-none">·····</span>
+                            <span className="mx-3 text-[10px] font-mono" style={{ color: '#2a2a2a', letterSpacing: '0.2em' }}>
+                                ···
+                            </span>
                         )}
                     </div>
                 )

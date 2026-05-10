@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm install *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(Remove-Item -Recurse -Force \"C:\\\\Users\\\\Martin\\\\Documents\\\\Proyectos\\\\infraestructura-configurador\\\\.next\" -ErrorAction SilentlyContinue)",
+      "Bash(Write-Host \"done\")"
     ]
   }
 }

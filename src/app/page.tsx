@@ -19,44 +19,77 @@ export default function Home() {
     const { setup } = calcularPrecio(serviciosSeleccionados)
     const sinServicios = serviciosSeleccionados.length === 0
 
-    const handleContinuar = () => router.push('/datos')
-
     return (
-        <main className="min-h-screen">
-            <div className="max-w-5xl mx-auto px-5 sm:px-8 pt-10 pb-36 lg:pb-12">
+        <main style={{ minHeight: '100vh', position: 'relative', zIndex: 10 }}>
+            <div style={{ maxWidth: 1024, margin: '0 auto', padding: '48px 24px 160px' }}>
 
-                <header className="mb-10">
-                    <div className="mb-5">
+                {/* Header */}
+                <header style={{ marginBottom: 48 }}>
+                    <div style={{ marginBottom: 20 }}>
                         <StepIndicator paso={1} />
                     </div>
-                    <h1
-                        className="text-3xl sm:text-4xl font-semibold mb-2 tracking-tight"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                    >
-                        Selecciona tus servicios
+                    <h1 style={{
+                        fontFamily: 'var(--font-display)',
+                        fontSize: 'clamp(24px, 3.5vw, 40px)',
+                        fontWeight: 700,
+                        color: '#ebebeb',
+                        letterSpacing: '-0.02em',
+                        lineHeight: 1.25,
+                        marginBottom: 12,
+                        overflowWrap: 'break-word',
+                        paddingBottom: 4,
+                    }}>
+                        Configura tu infraestructura
                     </h1>
-                    <p className="text-[#555] text-sm sm:text-base max-w-xl">
-                        Los primeros 5 están incluidos en el precio base.
-                        Cada servicio adicional suma 5 EUR al setup.
+                    <p style={{ color: '#555', fontSize: 15, maxWidth: 460, lineHeight: 1.6 }}>
+                        Elige los servicios que quieres instalar. Los primeros 5 están incluidos en el precio base — cada adicional suma 5 EUR.
                     </p>
                 </header>
 
-                <div className="flex flex-col lg:grid lg:grid-cols-[1fr_280px] gap-8 items-start">
-
-                    {/* Servicios */}
-                    <div className="space-y-8">
+                {/* Two-column layout */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 32 }} className="lg-layout">
+                    {/* Cards */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
                         {CATEGORIAS.map(({ id, label }) => {
                             const grupo = servicios.filter(s => s.categoria === id)
+                            const selCount = grupo.filter(s => serviciosSeleccionados.includes(s.id)).length
+
                             return (
                                 <section key={id}>
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#3a3a3a]">
+                                    {/* Category label */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                                        <span style={{
+                                            fontFamily: 'var(--font-mono)',
+                                            fontSize: 11,
+                                            fontWeight: 500,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '0.15em',
+                                            color: '#444',
+                                        }}>
                                             {label}
                                         </span>
-                                        <div className="flex-1 h-px bg-white/5" />
+                                        <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+                                        {selCount > 0 && (
+                                            <span style={{
+                                                fontFamily: 'var(--font-mono)',
+                                                fontSize: 11,
+                                                color: '#4a7cf5',
+                                                background: 'rgba(74,124,245,0.1)',
+                                                border: '1px solid rgba(74,124,245,0.25)',
+                                                padding: '2px 8px',
+                                                borderRadius: 4,
+                                            }}>
+                                                {selCount}
+                                            </span>
+                                        )}
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    {/* Grid */}
+                                    <div style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                                        gap: 8,
+                                    }}>
                                         {grupo.map(s => (
                                             <ServicioCard
                                                 key={s.id}
@@ -71,45 +104,56 @@ export default function Home() {
                         })}
                     </div>
 
-                    {/* Sidebar desktop */}
-                    <div className="hidden lg:flex flex-col gap-3 sticky top-8">
-                        <PrecioResumen />
-                        <button
-                            onClick={handleContinuar}
-                            disabled={sinServicios}
-                            className="w-full py-2.5 px-5 bg-[#4a7cf5] text-white text-sm font-medium rounded-lg
-                                transition-all hover:bg-[#3a6ce0] active:scale-[0.98]
-                                disabled:opacity-30 disabled:cursor-not-allowed
-                                shadow-[0_0_24px_rgba(74,124,245,0.15)]"
-                        >
-                            Continuar →
-                        </button>
-                        {sinServicios && (
-                            <p className="text-center text-[10px] font-mono text-[#3a3a3a]">
-                                Selecciona al menos un servicio
-                            </p>
-                        )}
+                    {/* Sidebar — desktop only, handled by CSS */}
+                    <div className="sidebar-desktop">
+                        <div style={{ position: 'sticky', top: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            <PrecioResumen />
+                            <button
+                                onClick={() => router.push('/datos')}
+                                disabled={sinServicios}
+                                className="btn-primary"
+                                style={{ width: '100%', opacity: sinServicios ? 0.35 : 1 }}
+                            >
+                                Continuar →
+                            </button>
+                            {sinServicios && (
+                                <p style={{ textAlign: 'center', fontSize: 11, fontFamily: 'var(--font-mono)', color: '#333' }}>
+                                    Selecciona al menos un servicio
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Barra sticky móvil */}
-            <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-md border-t border-white/8 px-5 py-4">
-                <div className="max-w-lg mx-auto flex flex-col gap-3">
+            {/* Mobile sticky bar */}
+            <div className="mobile-bar" style={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 50,
+                padding: '16px 20px',
+                background: 'rgba(10,10,10,0.97)',
+                backdropFilter: 'blur(16px)',
+                borderTop: '1px solid rgba(255,255,255,0.08)',
+            }}>
+                <div style={{ maxWidth: 480, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {!sinServicios && (
-                        <div className="flex items-center justify-between font-mono">
-                            <span className="text-xs text-[#555]">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#555' }}>
                                 {serviciosSeleccionados.length} servicio{serviciosSeleccionados.length !== 1 ? 's' : ''}
                             </span>
-                            <span className="text-[#4a7cf5] font-semibold">{setup} EUR setup</span>
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 15, fontWeight: 700, color: '#4a7cf5' }}>
+                                {setup} EUR
+                            </span>
                         </div>
                     )}
                     <button
-                        onClick={handleContinuar}
+                        onClick={() => router.push('/datos')}
                         disabled={sinServicios}
-                        className="w-full py-3 px-5 bg-[#4a7cf5] text-white text-sm font-medium rounded-lg
-                            transition-all hover:bg-[#3a6ce0] active:scale-[0.98]
-                            disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="btn-primary"
+                        style={{ width: '100%', opacity: sinServicios ? 0.35 : 1 }}
                     >
                         {sinServicios ? 'Selecciona al menos un servicio' : 'Continuar →'}
                     </button>
