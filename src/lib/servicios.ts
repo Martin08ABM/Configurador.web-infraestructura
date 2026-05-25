@@ -91,5 +91,18 @@ export const servicios: Servicio[] = [
         alternativa: "Toggl / Clockify",
         categoria: "productividad"
     },
+    {
+        id: "openclaw",
+        nombre: "OpenClaw",
+        descripcion: "Agente de IA autoalojado con memoria persistente y acceso a herramientas, diseñado para automatizar tareas complejas de forma autónoma",
+        alternativa: "ChatGPT / Claude.ai",
+        categoria: "ia"
+    },
+    {
+        id: "hermes-agent",
+        nombre: "Hermes Agent",
+        descripcion: "Asistente conversacional privado con soporte para modelos locales, ideal para consultas internas sin enviar datos a terceros",
+        alternativa: "Copilot / Gemini",
+        categoria: "ia"
+    },
 ]
-    

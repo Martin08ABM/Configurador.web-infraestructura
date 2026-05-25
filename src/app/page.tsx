@@ -11,6 +11,7 @@ const CATEGORIAS = [
     { id: 'general', label: 'General' },
     { id: 'desarrollo', label: 'Desarrollo' },
     { id: 'productividad', label: 'Productividad' },
+    { id: 'ia', label: 'Asistentes IA' },
 ]
 
 export default function Home() {
