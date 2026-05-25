@@ -11,7 +11,7 @@ export default function ResumenPage() {
     const [mounted, setMounted] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const { serviciosSeleccionados, datosEmpresa } = useConfiguradorStore()
+    const { serviciosSeleccionados, datosEmpresa, planMantenimiento } = useConfiguradorStore()
 
     useEffect(() => {
         setMounted(true)
@@ -22,7 +22,7 @@ export default function ResumenPage() {
     if (!mounted || serviciosSeleccionados.length === 0 || !datosEmpresa) return null
 
     const serviciosElegidos = catalogo.filter(s => serviciosSeleccionados.includes(s.id))
-    const precio = calcularPrecio(serviciosSeleccionados)
+    const precio = calcularPrecio(serviciosSeleccionados, planMantenimiento)
 
     const handlePagar = async () => {
         setLoading(true)
@@ -31,7 +31,7 @@ export default function ResumenPage() {
             const res = await fetch('/api/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ servicios: serviciosSeleccionados, datos: datosEmpresa }),
+                body: JSON.stringify({ servicios: serviciosSeleccionados, datos: datosEmpresa, plan: planMantenimiento }),
             })
             const json = await res.json()
             if (!res.ok) throw new Error(json.error ?? 'Error al crear el pago')

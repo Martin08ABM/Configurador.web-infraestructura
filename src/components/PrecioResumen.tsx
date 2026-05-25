@@ -1,10 +1,11 @@
 'use client'
 import { useConfiguradorStore } from '@/store/configuradorStore'
-import { calcularPrecio } from '@/lib/precio'
+import { calcularPrecio, PLANES } from '@/lib/precio'
 
 export default function PrecioResumen() {
     const sel = useConfiguradorStore(s => s.serviciosSeleccionados)
-    const { setup, mantenimiento, extras, serviciosIncluidos } = calcularPrecio(sel)
+    const plan = useConfiguradorStore(s => s.planMantenimiento)
+    const { setup, mantenimiento, extras, serviciosIncluidos } = calcularPrecio(sel, plan)
 
     return (
         <div
@@ -66,7 +67,7 @@ export default function PrecioResumen() {
                         </span>
                     </div>
 
-                    {/* Mantenimiento */}
+                    {/* Mantenimiento — muestra el plan seleccionado */}
                     <div
                         className="flex justify-between items-baseline"
                         style={{
@@ -76,7 +77,7 @@ export default function PrecioResumen() {
                         }}
                     >
                         <span className="font-mono" style={{ fontSize: 11, color: '#404040' }}>
-                            Mantenimiento
+                            {PLANES[plan].label}
                         </span>
                         <span className="font-mono" style={{ fontSize: 11, color: '#404040' }}>
                             {mantenimiento} EUR/mes

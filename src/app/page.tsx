@@ -6,6 +6,7 @@ import { calcularPrecio } from '@/lib/precio'
 import ServicioCard from '@/components/servicioCard'
 import StepIndicator from '@/components/StepIndicator'
 import PrecioResumen from '@/components/PrecioResumen'
+import PlanSelector from '@/components/PlanSelector'
 
 const CATEGORIAS = [
     { id: 'general', label: 'General' },
@@ -109,6 +110,7 @@ export default function Home() {
                     <div className="sidebar-desktop">
                         <div style={{ position: 'sticky', top: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
                             <PrecioResumen />
+                            <PlanSelector />
                             <button
                                 onClick={() => router.push('/datos')}
                                 disabled={sinServicios}
@@ -140,6 +142,7 @@ export default function Home() {
                 borderTop: '1px solid rgba(255,255,255,0.08)',
             }}>
                 <div style={{ maxWidth: 480, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <PlanSelector />
                     {!sinServicios && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#555' }}>

@@ -1,18 +1,22 @@
 import { NextResponse } from 'next/server'
 import { createStripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
-import { calcularPrecio } from '@/lib/precio'
+import { calcularPrecio, type PlanMantenimiento } from '@/lib/precio'
 import type { DatosEmpresa } from '@/types'
 
 export async function POST(req: Request) {
     try {
-        const { servicios, datos }: { servicios: string[]; datos: DatosEmpresa } = await req.json()
+        const { servicios, datos, plan = 'basico' }: {
+            servicios: string[]
+            datos: DatosEmpresa
+            plan?: PlanMantenimiento
+        } = await req.json()
 
         if (!servicios?.length || !datos?.email) {
             return NextResponse.json({ error: 'Datos incompletos' }, { status: 400 })
         }
 
-        const precio = calcularPrecio(servicios)
+        const precio = calcularPrecio(servicios, plan)
         const supabase = createSupabaseAdmin()
         const stripe = createStripe()
 
@@ -28,6 +32,7 @@ export async function POST(req: Request) {
                 telefono: datos.telefono,
                 precio_setup: precio.setup,
                 precio_mantenimiento: precio.mantenimiento,
+                plan_mantenimiento: plan,
                 estado: 'pendiente',
             })
             .select('id')
